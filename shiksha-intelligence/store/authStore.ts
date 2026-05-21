@@ -60,11 +60,15 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   login: async (user: AuthUser, tokens: AuthTokens) => {
-    await Promise.all([
-      SecureStore.setItemAsync(KEYS.ACCESS_TOKEN,  tokens.accessToken),
-      SecureStore.setItemAsync(KEYS.REFRESH_TOKEN, tokens.refreshToken),
-      SecureStore.setItemAsync(KEYS.USER,          JSON.stringify(user)),
-    ]);
+    const writes: Promise<void>[] = [
+      SecureStore.setItemAsync(KEYS.ACCESS_TOKEN, tokens.accessToken),
+      SecureStore.setItemAsync(KEYS.USER, JSON.stringify(user)),
+    ];
+    // refreshToken is null when rememberMe=false — don't store null
+    if (tokens.refreshToken) {
+      writes.push(SecureStore.setItemAsync(KEYS.REFRESH_TOKEN, tokens.refreshToken));
+    }
+    await Promise.all(writes);
     set({ user, accessToken: tokens.accessToken });
   },
 

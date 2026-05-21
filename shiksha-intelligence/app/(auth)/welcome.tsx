@@ -18,7 +18,7 @@ import { router } from "expo-router";
 import { VolumeOff, Volume2 } from "lucide-react-native";
 import { loginUser } from "@/services/auth"
 import { useAuthStore } from "@/store/authStore";
-import { AuthUser, UserRole } from "@/types/auth";
+import { AuthUser, UserRole, normalizeRole } from "@/types/auth";
 
 import Animated, {
   FadeIn,
@@ -113,19 +113,18 @@ export default function WelcomeScreen() {
 
       const dto = data.userDetailsDto;
 
-      // Normalise roles — backend sends strings, we cast to UserRole[]
-      const roles = (dto.roles ?? []).map((r: string) =>
-        r.toUpperCase() as UserRole,
-      );
+      // Use top-level roles array (most reliable) and normalise:
+      // strips "ROLE_" prefix and maps SECURITY_GUARD → GUARD
+      const roles = (data.roles ?? dto.roles ?? []).map(normalizeRole);
 
       const user: AuthUser = {
-        id:             dto.id,
-        name:           dto.name,
+        id:             dto.userId,                                   // backend: userId
+        name:           [dto.firstName, dto.lastName].filter(Boolean).join(' ') || dto.username,
         username:       dto.username,
         email:          dto.email,
         roles,
-        // Store expiry as unix ms so we can check it later
-        tokenExpiresAt: Date.now() + (data.expiresIn ?? 3600) * 1000,
+        // JWT expiry — default 1 hour if backend doesn’t send expiresIn
+        tokenExpiresAt: Date.now() + 60 * 60 * 1000,
       };
 
       await login(user, {

@@ -2,16 +2,29 @@ import { AuthUser, AuthTokens } from '@/types/auth';
 
 const BASE_URL = 'http://192.168.0.3:8080/api/v1';
 
+/**
+ * Matches the Java LoginResponse record exactly:
+ *   record LoginResponse(
+ *     String accessToken, String refreshToken,
+ *     UserDetailsDto userDetailsDto,
+ *     Set<String> roles,           ← top-level, values like "ROLE_ADMIN"
+ *     boolean requiresPasswordChange
+ *   )
+ */
 export interface LoginResponse {
   accessToken: string;
-  refreshToken: string;
-  expiresIn: number;           // seconds until access token expires
+  refreshToken: string | null;
+  requiresPasswordChange: boolean;
+  /** Top-level roles — e.g. ["ROLE_ADMIN", "ROLE_SECURITY_GUARD"] */
+  roles: string[];
   userDetailsDto: {
-    id: number;
-    name: string;
+    userId: number;          // Java field: userId (not id)
     username: string;
+    firstName: string | null;
+    lastName: string | null;
     email: string;
-    roles: string[];           // e.g. ["ADMIN"]
+    profileUrl: string | null;
+    roles: string[];         // same role strings on the DTO too
   };
 }
 
