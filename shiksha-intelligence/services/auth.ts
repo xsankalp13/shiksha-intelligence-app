@@ -1,6 +1,6 @@
 import { AuthUser, AuthTokens } from '@/types/auth';
 
-const BASE_URL = 'http://192.168.0.3:8080/api/v1';
+const BASE_URL = 'http://192.168.0.106:8080/api/v1';
 
 /**
  * Matches the Java LoginResponse record exactly:
@@ -40,9 +40,9 @@ export async function loginUser(creds: {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      username:       creds.username,
-      password:       creds.password,
-      rememberMe:     true,
+      username: creds.username,
+      password: creds.password,
+      rememberMe: true,
       academicYearId: 1,
     }),
   });

@@ -6,9 +6,14 @@ export default function ProtectedLayout() {
     <Stack
       screenOptions={{
         headerShown: false,
-        animation: 'fade',
+        animation: 'slide_from_right',
         contentStyle: { backgroundColor: '#F8FAFC' },
       }}
-    />
+    >
+      <Stack.Screen name="training-and-placement" options={{ animation: 'none' }} />
+      <Stack.Screen name="jobs" options={{ animation: 'none' }} />
+      <Stack.Screen name="training" options={{ animation: 'none' }} />
+      <Stack.Screen name="profile" options={{ animation: 'none' }} />
+    </Stack>
   );
 }

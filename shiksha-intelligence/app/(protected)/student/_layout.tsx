@@ -1,11 +1,13 @@
-import { Redirect } from 'expo-router';
-import { Tabs } from 'expo-router';
+import { Redirect, Tabs } from 'expo-router';
+import { View, StyleSheet } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuthStore } from '@/store/authStore';
 import { canAccess } from '@/utils/roleGuard';
-import { Home, Clock, BookOpen, User } from 'lucide-react-native';
+import { Home, GraduationCap, Wallet, User } from 'lucide-react-native';
 
 export default function StudentLayout() {
   const { user } = useAuthStore();
+  const insets = useSafeAreaInsets();
 
   if (!user || !canAccess(user.roles, ['STUDENT'])) {
     return <Redirect href="/home" />;
@@ -15,15 +17,15 @@ export default function StudentLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor:   '#6366F1',
-        tabBarInactiveTintColor: '#94A3B8',
+        tabBarActiveTintColor:   '#0F172A', // Dark text color for active label matching screenshot
+        tabBarInactiveTintColor: '#64748B',
         tabBarStyle: {
           backgroundColor: '#FFFFFF',
           borderTopColor:  '#F1F5F9',
           borderTopWidth:  1,
-          paddingBottom:   8,
-          paddingTop:      6,
-          height:          60,
+          height:          68 + Math.max(insets.bottom - 10, 6),
+          paddingBottom:   Math.max(insets.bottom - 6, 8),
+          paddingTop:      10,
         },
         tabBarLabelStyle: {
           fontFamily: 'Inter_500Medium',
@@ -35,30 +37,60 @@ export default function StudentLayout() {
         name="home"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color, size }) => <Home size={size} color={color} />,
+          tabBarIcon: ({ focused }) => (
+            <View style={[styles.iconWrapper, focused && styles.iconWrapperActive]}>
+              <Home size={22} color={focused ? '#0F172A' : '#64748B'} />
+            </View>
+          ),
         }}
       />
       <Tabs.Screen
         name="timetable"
         options={{
-          title: 'Timetable',
-          tabBarIcon: ({ color, size }) => <Clock size={size} color={color} />,
+          title: 'Academic',
+          tabBarIcon: ({ focused }) => (
+            <View style={[styles.iconWrapper, focused && styles.iconWrapperActive]}>
+              <GraduationCap size={22} color={focused ? '#0F172A' : '#64748B'} />
+            </View>
+          ),
         }}
       />
       <Tabs.Screen
         name="assignments"
         options={{
-          title: 'Assignments',
-          tabBarIcon: ({ color, size }) => <BookOpen size={size} color={color} />,
+          title: 'Fees',
+          tabBarIcon: ({ focused }) => (
+            <View style={[styles.iconWrapper, focused && styles.iconWrapperActive]}>
+              <Wallet size={22} color={focused ? '#0F172A' : '#64748B'} />
+            </View>
+          ),
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           title: 'Profile',
-          tabBarIcon: ({ color, size }) => <User size={size} color={color} />,
+          tabBarIcon: ({ focused }) => (
+            <View style={[styles.iconWrapper, focused && styles.iconWrapperActive]}>
+              <User size={22} color={focused ? '#0F172A' : '#64748B'} />
+            </View>
+          ),
         }}
       />
     </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+  iconWrapper: {
+    width: 64,
+    height: 32,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 4,
+  },
+  iconWrapperActive: {
+    backgroundColor: '#51F5DE', // Mint-teal active background pill/circle matching screenshot
+  },
+});
