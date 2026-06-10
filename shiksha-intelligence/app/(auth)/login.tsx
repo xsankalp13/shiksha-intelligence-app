@@ -30,8 +30,8 @@ export default function LoginScreen() {
   const [loading,         setLoading]         = useState(false);
   const [error,           setError]           = useState<string | null>(null);
 
-  async function handleLogin() {
-    if (!username.trim() || !password.trim()) {
+  async function triggerLogin(u: string, p: string) {
+    if (!u.trim() || !p.trim()) {
       setError('Please enter your username and password.');
       return;
     }
@@ -40,7 +40,7 @@ export default function LoginScreen() {
     setError(null);
 
     try {
-      const data = await loginUser({ username: username.trim(), password });
+      const data = await loginUser({ username: u.trim(), password: p });
 
       const dto = data.userDetailsDto;
 
@@ -70,6 +70,10 @@ export default function LoginScreen() {
     } finally {
       setLoading(false);
     }
+  }
+
+  function handleLogin() {
+    triggerLogin(username, password);
   }
 
   return (
@@ -170,6 +174,36 @@ export default function LoginScreen() {
             </Text>
           </TouchableOpacity>
 
+          {/* TODO: Remove or disable this Demo Login section before going live/production */}
+          {/* Quick Demo Login Section */}
+          <View style={styles.demoSection}>
+            <Text style={styles.demoTitle}>
+              💡 Demo Portals (Tap to autofill & sign in)
+            </Text>
+            <View style={styles.demoContainer}>
+              {[
+                { label: 'Student', user: 'student', icon: '🎒' },
+                { label: 'Teacher', user: 'teacher', icon: '🧑‍🏫' },
+                { label: 'Parent', user: 'parent', icon: '👪' },
+              ].map((role) => (
+                <TouchableOpacity
+                  key={role.user}
+                  onPress={() => {
+                    setUsername(role.user);
+                    setPassword('password');
+                    triggerLogin(role.user, 'password');
+                  }}
+                  activeOpacity={0.7}
+                  style={styles.demoPill}
+                  disabled={loading}
+                >
+                  <Text style={styles.demoIcon}>{role.icon}</Text>
+                  <Text style={styles.demoPillText}>{role.label}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+
           <View className="flex-1" />
 
           {/* Sign In button */}
@@ -244,5 +278,47 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter_400Regular',
     fontSize: 13,
     color: '#DC2626',
+  },
+  demoSection: {
+    marginBottom: 24,
+    marginTop: 4,
+  },
+  demoTitle: {
+    fontFamily: 'Inter_500Medium',
+    fontSize: 12,
+    color: '#64748B',
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  demoContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 4,
+  },
+  demoPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F8FAFC',
+    borderRadius: 99,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    width: '30%',
+    justifyContent: 'center',
+    shadowColor: '#0F172A',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  demoIcon: {
+    fontSize: 14,
+    marginRight: 6,
+  },
+  demoPillText: {
+    fontFamily: 'Inter_600SemiBold',
+    fontSize: 12,
+    color: '#334155',
   },
 });
