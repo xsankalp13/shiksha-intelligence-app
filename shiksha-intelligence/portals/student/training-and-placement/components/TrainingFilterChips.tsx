@@ -61,14 +61,15 @@ const styles = StyleSheet.create({
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: 'rgba(255,255,255,0.08)',
   },
+  chipText: {
+    fontSize: 13,
+  },
   activeChipText: {
     color: '#7c6ef7',
-    fontSize: 13,
     fontWeight: '500',
   },
   inactiveChipText: {
     color: '#8a8a9a',
-    fontSize: 13,
     fontWeight: '400',
   },
   pulseDot: {
