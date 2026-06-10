@@ -237,7 +237,7 @@ After generating images:
 
 ```txt
 assets/images/
-  onboarding-illustration.png
+  onboarding-illustration.jpg
   mascot-happy.png
 ```
 
