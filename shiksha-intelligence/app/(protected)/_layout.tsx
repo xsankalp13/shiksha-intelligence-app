@@ -14,6 +14,8 @@ export default function ProtectedLayout() {
       <Stack.Screen name="jobs" options={{ animation: 'none' }} />
       <Stack.Screen name="training" options={{ animation: 'none' }} />
       <Stack.Screen name="profile" options={{ animation: 'none' }} />
+      <Stack.Screen name="ai-coach" options={{ animation: 'none' }} />
+
     </Stack>
   );
 }

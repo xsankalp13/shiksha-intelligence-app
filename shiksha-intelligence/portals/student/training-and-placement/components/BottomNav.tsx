@@ -42,7 +42,14 @@ export default function BottomNav({ safeBottomInset, activeTab = 'home' }: Botto
         <Book size={22} color={activeTab === 'training' ? "#7c6ef7" : "#55555f"} />
         <Text style={activeTab === 'training' ? styles.navLabelActive : styles.navLabel}>Training</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={activeTab === 'ai' ? styles.navItemActive : styles.navItem}>
+      <TouchableOpacity 
+        style={activeTab === 'ai' ? styles.navItemActive : styles.navItem}
+        activeOpacity={1}
+        onPress={() => {
+          // @ts-ignore
+          if (activeTab !== 'ai') router.replace('/(protected)/ai-coach');
+        }}
+      >
         <MessageSquare size={22} color={activeTab === 'ai' ? "#7c6ef7" : "#55555f"} />
         <Text style={activeTab === 'ai' ? styles.navLabelActive : styles.navLabel}>AI Coach</Text>
       </TouchableOpacity>
